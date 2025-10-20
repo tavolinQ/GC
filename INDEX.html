@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>giroDcama CESMHL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --cesmhl-blue: #1a5276;
+            --cesmhl-light: #5dade2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--cesmhl-blue), var(--cesmhl-light));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .tab.active {
+            background: linear-gradient(to right, var(--cesmhl-blue), var(--cesmhl-light));
+            color: white;
+        }
+        
+        .tab:not(.active):hover {
+            background-color: #f8f9fa;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--cesmhl-blue);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--cesmhl-light);
+            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--cesmhl-blue), var(--cesmhl-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--cesmhl-blue);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--accent);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            border-left: 4px solid var(--cesmhl-blue);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--cesmhl-blue);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid, .filters, .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn-group button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🔄</div>
+                    <div>
+                        <h1>giroDcama CESMHL</h1>
+                        <div class="subtitle">Sistema de Gestión de Camas Hospitalarias</div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button id="backupBtn" class="btn-primary">📋 Copia de Seguridad</button>
+                    <button id="restoreBtn" class="btn-warning">🔄 Restaurar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalPatients">0</div>
+                <div class="stat-label">Pacientes Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activePatients">0</div>
+                <div class="stat-label">Pacientes Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="occupiedBeds">0</div>
+                <div class="stat-label">Camas Ocupadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="availableBeds">0</div>
+                <div class="stat-label">Camas Disponibles</div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="tab active" data-tab="registro">📝 Registro</div>
+            <div class="tab" data-tab="lista">📋 Lista de Pacientes</div>
+            <div class="tab" data-tab="filtros">🔍 Filtros</div>
+        </div>
+        
+        <div id="registro" class="tab-content active">
+            <h2>Registro de Paciente</h2>
+            <form id="patientForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI</label>
+                        <input type="text" id="dni" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dx">DX</label>
+                        <input type="text" id="dx">
+                    </div>
+                    <div class="form-group">
+                        <label for="diaIngreso">Día de Ingreso</label>
+                        <input type="date" id="diaIngreso">
+                    </div>
+                    <div class="form-group">
+                        <label for="diaEgreso">Día de Egreso</label>
+                        <input type="date" id="diaEgreso">
+                    </div>
+                    <div class="form-group">
+                        <label for="diasEstadia">Días de Estadía</label>
+                        <input type="number" id="diasEstadia">
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo">
+                            <option value="">Seleccionar</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sector">Sector</label>
+                        <input type="text" id="sector">
+                    </div>
+                    <div class="form-group">
+                        <label for="habitacion">Habitación</label>
+                        <input type="text" id="habitacion">
+                    </div>
+                    <div class="form-group">
+                        <label for="cama">Cama</label>
+                        <select id="cama">
+                            <option value="">Seleccionar</option>
+                            <option value="A">Cama A</option>
+                            <option value="B">Cama B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="obraSocial">Obra Social</label>
+                        <input type="text" id="obraSocial">
+                    </div>
+                    <div class="form-group">
+                        <label for="medSeg">Med Seg</label>
+                        <input type="text" id="medSeg">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones"></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn-primary">💾 Guardar Paciente</button>
+                    <button type="button" id="clearForm" class="btn-warning">🗑️ Limpiar Formulario</button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="lista" class="tab-content">
+            <h2>Lista de Pacientes</h2>
+            <div class="btn-group">
+                <button id="printBtn" class="btn-primary">🖨️ Imprimir</button>
+                <button id="pdfBtn" class="btn-success">📄 Generar PDF</button>
+                <button id="shareBtn" class="btn-warning">📤 Compartir</button>
+            </div>
+            <div id="patientsTableContainer">
+                <table id="patientsTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>DNI</th>
+                            <th>DX</th>
+                            <th>Ingreso</th>
+                            <th>Egreso</th>
+                            <th>Estadía</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientsTableBody">
+                        <!-- Los registros se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="filtros" class="tab-content">
+            <h2>Filtrar Pacientes</h2>
+            <div class="filters">
+                <div class="form-group">
+                    <label for="filterNombre">Nombre</label>
+                    <input type="text" id="filterNombre">
+                </div>
+                <div class="form-group">
+                    <label for="filterApellido">Apellido</label>
+                    <input type="text" id="filterApellido">
+                </div>
+                <div class="form-group">
+                    <label for="filterDni">DNI</label>
+                    <input type="text" id="filterDni">
+                </div>
+                <div class="form-group">
+                    <label for="filterSector">Sector</label>
+                    <input type="text" id="filterSector">
+                </div>
+                <div class="form-group">
+                    <label for="filterHabitacion">Habitación</label>
+                    <input type="text" id="filterHabitacion">
+                </div>
+                <div class="form-group">
+                    <label for="filterObraSocial">Obra Social</label>
+                    <input type="text" id="filterObraSocial">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="applyFilters" class="btn-primary">🔍 Aplicar Filtros</button>
+                <button id="clearFilters" class="btn-warning">🗑️ Limpiar Filtros</button>
+            </div>
+            <div id="filteredResults">
+                <!-- Los resultados filtrados se mostrarán aquí -->
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Base de datos
+        let db;
+        const DB_NAME = 'giroDcamaDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'pacientes';
+        
+        // Inicializar la base de datos
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains(STORE_NAME)) {
+                        const store = database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        store.createIndex('dni', 'dni', { unique: true });
+                        store.createIndex('nombre', 'nombre', { unique: false });
+                        store.createIndex('apellido', 'apellido', { unique: false });
+                        store.createIndex('sector', 'sector', { unique: false });
+                        store.createIndex('habitacion', 'habitacion', { unique: false });
+                        store.createIndex('cama', 'cama', { unique: false });
+                    }
+                };
+            });
+        }
+        
+        // Actualizar estadísticas
+        function updateStats() {
+            getAllPatients().then(patients => {
+                const total = patients.length;
+                const active = patients.filter(p => !p.diaEgreso).length;
+                const occupied = patients.filter(p => !p.diaEgreso && p.habitacion && p.cama).length;
+                
+                document.getElementById('totalPatients').textContent = total;
+                document.getElementById('activePatients').textContent = active;
+                document.getElementById('occupiedBeds').textContent = occupied;
+                document.getElementById('availableBeds').textContent = Math.max(0, 50 - occupied); // Asumiendo 50 camas totales
+            });
+        }
+        
+        // Guardar paciente
+        function savePatient(patient) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.add(patient);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+        
+        // Obtener todos los pacientes
+        function getAllPatients() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.getAll();
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+        
+        // Actualizar paciente
+        function updatePatient(id, patient) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.put({ ...patient, id });
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+        
+        // Eliminar paciente
+        function deletePatient(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.delete(id);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+        
+        // Filtrar pacientes
+        function filterPatients(filters) {
+            return new Promise((resolve, reject) => {
+                getAllPatients().then(patients => {
+                    let filtered = patients;
+                    
+                    if (filters.nombre) {
+                        filtered = filtered.filter(p => 
+                            p.nombre.toLowerCase().includes(filters.nombre.toLowerCase())
+                        );
+                    }
+                    
+                    if (filters.apellido) {
+                        filtered = filtered.filter(p => 
+                            p.apellido.toLowerCase().includes(filters.apellido.toLowerCase())
+                        );
+                    }
+                    
+                    if (filters.dni) {
+                        filtered = filtered.filter(p => 
+                            p.dni.includes(filters.dni)
+                        );
+                    }
+                    
+                    if (filters.sector) {
+                        filtered = filtered.filter(p => 
+                            p.sector.toLowerCase().includes(filters.sector.toLowerCase())
+                        );
+                    }
+                    
+                    if (filters.habitacion) {
+                        filtered = filtered.filter(p => 
+                            p.habitacion.includes(filters.habitacion)
+                        );
+                    }
+                    
+                    if (filters.obraSocial) {
+                        filtered = filtered.filter(p => 
+                            p.obraSocial.toLowerCase().includes(filters.obraSocial.toLowerCase())
+                        );
+                    }
+                    
+                    resolve(filtered);
+                }).catch(reject);
+            });
+        }
+        
+        // Mostrar notificación
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Cargar pacientes en la tabla
+        function loadPatientsTable() {
+            getAllPatients().then(patients => {
+                const tbody = document.getElementById('patientsTableBody');
+                tbody.innerHTML = '';
+                
+                patients.forEach(patient => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${patient.nombre}</td>
+                        <td>${patient.apellido}</td>
+                        <td>${patient.dni}</td>
+                        <td>${patient.dx}</td>
+                        <td>${patient.diaIngreso || '-'}</td>
+                        <td>${patient.diaEgreso || '-'}</td>
+                        <td>${patient.diasEstadia || '-'}</td>
+                        <td class="actions">
+                            <button class="action-btn btn-primary" onclick="editPatient(${patient.id})">✏️ Editar</button>
+                            <button class="action-btn btn-danger" onclick="deletePatientConfirm(${patient.id})">🗑️ Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                updateStats();
+            }).catch(error => {
+                console.error('Error al cargar pacientes:', error);
+                showNotification('Error al cargar pacientes', 'error');
+            });
+        }
+        
+        // Editar paciente
+        function editPatient(id) {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(id);
+            
+            request.onsuccess = () => {
+                const patient = request.result;
+                if (patient) {
+                    // Llenar el formulario con los datos del paciente
+                    document.getElementById('nombre').value = patient.nombre;
+                    document.getElementById('apellido').value = patient.apellido;
+                    document.getElementById('dni').value = patient.dni;
+                    document.getElementById('dx').value = patient.dx;
+                    document.getElementById('diaIngreso').value = patient.diaIngreso;
+                    document.getElementById('diaEgreso').value = patient.diaEgreso;
+                    document.getElementById('diasEstadia').value = patient.diasEstadia;
+                    document.getElementById('sexo').value = patient.sexo;
+                    document.getElementById('sector').value = patient.sector;
+                    document.getElementById('habitacion').value = patient.habitacion;
+                    document.getElementById('cama').value = patient.cama;
+                    document.getElementById('obraSocial').value = patient.obraSocial;
+                    document.getElementById('medSeg').value = patient.medSeg;
+                    document.getElementById('observaciones').value = patient.observaciones;
+                    
+                    // Cambiar el comportamiento del formulario para actualizar
+                    const form = document.getElementById('patientForm');
+                    form.onsubmit = (e) => {
+                        e.preventDefault();
+                        updatePatientData(id);
+                    };
+                    
+                    // Cambiar a la pestaña de registro
+                    switchTab('registro');
+                    
+                    showNotification('Paciente cargado para edición');
+                }
+            };
+            
+            request.onerror = () => {
+                showNotification('Error al cargar paciente para edición', 'error');
+            };
+        }
+        
+        // Actualizar paciente
+        function updatePatientData(id) {
+            const patient = getFormData();
+            
+            updatePatient(id, patient).then(() => {
+                showNotification('Paciente actualizado correctamente');
+                resetForm();
+                loadPatientsTable();
+            }).catch(error => {
+                console.error('Error al actualizar paciente:', error);
+                showNotification('Error al actualizar paciente', 'error');
+            });
+        }
+        
+        // Confirmar eliminación de paciente
+        function deletePatientConfirm(id) {
+            if (confirm('¿Está seguro de que desea eliminar este paciente?')) {
+                deletePatient(id).then(() => {
+                    showNotification('Paciente eliminado correctamente');
+                    loadPatientsTable();
+                }).catch(error => {
+                    console.error('Error al eliminar paciente:', error);
+                    showNotification('Error al eliminar paciente', 'error');
+                });
+            }
+        }
+        
+        // Obtener datos del formulario
+        function getFormData() {
+            return {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                dni: document.getElementById('dni').value,
+                dx: document.getElementById('dx').value,
+                diaIngreso: document.getElementById('diaIngreso').value,
+                diaEgreso: document.getElementById('diaEgreso').value,
+                diasEstadia: document.getElementById('diasEstadia').value,
+                sexo: document.getElementById('sexo').value,
+                sector: document.getElementById('sector').value,
+                habitacion: document.getElementById('habitacion').value,
+                cama: document.getElementById('cama').value,
+                obraSocial: document.getElementById('obraSocial').value,
+                medSeg: document.getElementById('medSeg').value,
+                observaciones: document.getElementById('observaciones').value
+            };
+        }
+        
+        // Resetear formulario
+        function resetForm() {
+            document.getElementById('patientForm').reset();
+            // Restaurar el comportamiento original del formulario
+            document.getElementById('patientForm').onsubmit = handleFormSubmit;
+        }
+        
+        // Manejar envío del formulario
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const patient = getFormData();
+            
+            savePatient(patient).then(() => {
+                showNotification('Paciente guardado correctamente');
+                resetForm();
+                loadPatientsTable();
+            }).catch(error => {
+                console.error('Error al guardar paciente:', error);
+                if (error.name === 'ConstraintError') {
+                    showNotification('Ya existe un paciente con ese DNI', 'error');
+                } else {
+                    showNotification('Error al guardar paciente', 'error');
+                }
+            });
+        }
+        
+        // Cambiar pestaña
+        function switchTab(tabName) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Actualizar estado de las pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Si es la pestaña de lista, cargar la tabla
+            if (tabName === 'lista') {
+                loadPatientsTable();
+            }
+        }
+        
+        // Aplicar filtros
+        function applyFilters() {
+            const filters = {
+                nombre: document.getElementById('filterNombre').value,
+                apellido: document.getElementById('filterApellido').value,
+                dni: document.getElementById('filterDni').value,
+                sector: document.getElementById('filterSector').value,
+                habitacion: document.getElementById('filterHabitacion').value,
+                obraSocial: document.getElementById('filterObraSocial').value
+            };
+            
+            filterPatients(filters).then(filteredPatients => {
+                const container = document.getElementById('filteredResults');
+                container.innerHTML = '';
+                
+                if (filteredPatients.length === 0) {
+                    container.innerHTML = '<p>No se encontraron pacientes con los filtros aplicados.</p>';
+                    return;
+                }
+                
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>DNI</th>
+                            <th>DX</th>
+                            <th>Ingreso</th>
+                            <th>Egreso</th>
+                            <th>Estadía</th>
+                            <th>Sector</th>
+                            <th>Habitación</th>
+                            <th>Cama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredPatients.map(patient => `
+                            <tr>
+                                <td>${patient.nombre}</td>
+                                <td>${patient.apellido}</td>
+                                <td>${patient.dni}</td>
+                                <td>${patient.dx}</td>
+                                <td>${patient.diaIngreso || '-'}</td>
+                                <td>${patient.diaEgreso || '-'}</td>
+                                <td>${patient.diasEstadia || '-'}</td>
+                                <td>${patient.sector}</td>
+                                <td>${patient.habitacion}</td>
+                                <td>${patient.cama}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                
+                container.appendChild(table);
+            }).catch(error => {
+                console.error('Error al aplicar filtros:', error);
+                showNotification('Error al aplicar filtros', 'error');
+            });
+        }
+        
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filterNombre').value = '';
+            document.getElementById('filterApellido').value = '';
+            document.getElementById('filterDni').value = '';
+            document.getElementById('filterSector').value = '';
+            document.getElementById('filterHabitacion').value = '';
+            document.getElementById('filterObraSocial').value = '';
+            document.getElementById('filteredResults').innerHTML = '';
+        }
+        
+        // Imprimir
+        function printTable() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>giroDcama CESMHL - Lista de Pacientes</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            h1 { color: #1a5276; text-align: center; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #1a5276; color: white; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>giroDcama CESMHL - Lista de Pacientes</h1>
+                        ${document.getElementById('patientsTable').outerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // Generar PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            getAllPatients().then(patients => {
+                // Título
+                doc.setFontSize(16);
+                doc.setTextColor(26, 82, 118);
+                doc.text('giroDcama CESMHL - Lista de Pacientes', 14, 15);
+                
+                // Fecha de generación
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generado el: ${new Date().toLocaleDateString()}`, 14, 22);
+                
+                // Tabla
+                const tableColumn = ["Nombre", "Apellido", "DNI", "DX", "Ingreso", "Egreso", "Estadía"];
+                const tableRows = [];
+                
+                patients.forEach(patient => {
+                    const patientData = [
+                        patient.nombre,
+                        patient.apellido,
+                        patient.dni,
+                        patient.dx,
+                        patient.diaIngreso || '-',
+                        patient.diaEgreso || '-',
+                        patient.diasEstadia || '-'
+                    ];
+                    tableRows.push(patientData);
+                });
+                
+                doc.autoTable({
+                    head: [tableColumn],
+                    body: tableRows,
+                    startY: 30,
+                    styles: { fontSize: 10 },
+                    headStyles: { 
+                        fillColor: [26, 82, 118],
+                        textColor: 255
+                    },
+                    alternateRowStyles: {
+                        fillColor: [240, 240, 240]
+                    }
+                });
+                
+                // Guardar PDF
+                doc.save('giroDcama_pacientes.pdf');
+                showNotification('PDF generado correctamente');
+            }).catch(error => {
+                console.error('Error al generar PDF:', error);
+                showNotification('Error al generar PDF', 'error');
+            });
+        }
+        
+        // Compartir
+        function shareData() {
+            getAllPatients().then(patients => {
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Nombre,Apellido,DNI,DX,Ingreso,Egreso,Estadía,Sexo,Sector,Habitación,Cama,Obra Social,Med Seg,Observaciones\n";
+                
+                patients.forEach(patient => {
+                    const row = [
+                        patient.nombre,
+                        patient.apellido,
+                        patient.dni,
+                        patient.dx,
+                        patient.diaIngreso,
+                        patient.diaEgreso,
+                        patient.diasEstadia,
+                        patient.sexo,
+                        patient.sector,
+                        patient.habitacion,
+                        patient.cama,
+                        patient.obraSocial,
+                        patient.medSeg,
+                        patient.observaciones
+                    ].map(field => `"${field || ''}"`).join(",");
+                    
+                    csvContent += row + "\n";
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "giroDcama_pacientes.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Datos exportados correctamente');
+            }).catch(error => {
+                console.error('Error al exportar datos:', error);
+                showNotification('Error al exportar datos', 'error');
+            });
+        }
+        
+        // Crear copia de seguridad
+        function createBackup() {
+            getAllPatients().then(patients => {
+                const backupData = {
+                    timestamp: new Date().toISOString(),
+                    app: "giroDcama CESMHL",
+                    version: "1.0",
+                    patients: patients
+                };
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `giroDcama_backup_${new Date().toISOString().split('T')[0]}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+                
+                showNotification('Copia de seguridad creada correctamente');
+            }).catch(error => {
+                console.error('Error al crear copia de seguridad:', error);
+                showNotification('Error al crear copia de seguridad', 'error');
+            });
+        }
+        
+        // Restaurar desde copia de seguridad
+        function restoreBackup() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = event => {
+                    try {
+                        const backupData = JSON.parse(event.target.result);
+                        
+                        if (!backupData.patients || !Array.isArray(backupData.patients)) {
+                            throw new Error('Formato de archivo inválido');
+                        }
+                        
+                        // Limpiar la base de datos actual
+                        const transaction = db.transaction([STORE_NAME], 'readwrite');
+                        const store = transaction.objectStore(STORE_NAME);
+                        const clearRequest = store.clear();
+                        
+                        clearRequest.onsuccess = () => {
+                            // Insertar los pacientes de la copia
+                            const addPromises = backupData.patients.map(patient => savePatient(patient));
+                            
+                            Promise.all(addPromises).then(() => {
+                                showNotification('Copia de seguridad restaurada correctamente');
+                                loadPatientsTable();
+                            }).catch(error => {
+                                console.error('Error al restaurar pacientes:', error);
+                                showNotification('Error al restaurar pacientes', 'error');
+                            });
+                        };
+                        
+                        clearRequest.onerror = () => {
+                            showNotification('Error al limpiar la base de datos', 'error');
+                        };
+                    } catch (error) {
+                        console.error('Error al procesar archivo:', error);
+                        showNotification('Error al procesar archivo de copia de seguridad', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // Programar copia de seguridad automática cada 48 horas
+        function scheduleAutoBackup() {
+            setInterval(() => {
+                createBackup();
+            }, 48 * 60 * 60 * 1000); // 48 horas en milisegundos
+        }
+        
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar base de datos
+            initDB().then(() => {
+                console.log('Base de datos inicializada');
+                loadPatientsTable();
+                
+                // Programar copia de seguridad automática
+                scheduleAutoBackup();
+            }).catch(error => {
+                console.error('Error al inicializar la base de datos:', error);
+                showNotification('Error al inicializar la base de datos', 'error');
+            });
+            
+            // Configurar eventos
+            document.getElementById('patientForm').onsubmit = handleFormSubmit;
+            document.getElementById('clearForm').onclick = resetForm;
+            
+            // Configurar pestañas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                });
+            });
+            
+            // Configurar filtros
+            document.getElementById('applyFilters').onclick = applyFilters;
+            document.getElementById('clearFilters').onclick = clearFilters;
+            
+            // Configurar botones de acción
+            document.getElementById('printBtn').onclick = printTable;
+            document.getElementById('pdfBtn').onclick = generatePDF;
+            document.getElementById('shareBtn').onclick = shareData;
+            document.getElementById('backupBtn').onclick = createBackup;
+            document.getElementById('restoreBtn').onclick = restoreBackup;
+            
+            // Establecer fecha de ingreso por defecto como hoy
+            document.getElementById('diaIngreso').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
